@@ -10,7 +10,7 @@ public class Board {
 
     //Adds a piece to the board if no piece exists there yet(board[x][y] == 0)
         //Currently accepts any # for piece parameter since we haven't decided what numbers we're accpeting (probably 1 and 2 for the two players?)
-    public boolean addPeice(int x, int y, int piece) {
+    public boolean addPiece(int x, int y, int piece) {
         boolean flag = false;
         if(board[x][y] == 0) {
             board[x][y] = piece;
