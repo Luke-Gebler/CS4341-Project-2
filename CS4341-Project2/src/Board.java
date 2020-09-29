@@ -1,5 +1,4 @@
 import java.io.*; 
-
 public class Board {
     
     //Main board
