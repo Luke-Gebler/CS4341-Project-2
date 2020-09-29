@@ -25,4 +25,34 @@ public class Board {
         piece = board[x][y];
         return piece;
     }
+    
+    //untested. This is a function for creating a move file
+    //teamname: the name of our team
+    //row: the letter of the row that has been selected (might be able to have this be a number but map it to some numbers?)
+    //col: the number of the column that has been selected
+    public void printMove(String teamname, String row, String col)//
+    {
+    	try {
+    	      	File myObj = new File(teamname + ".txt");
+    	      		if (myObj.createNewFile())
+    	      		{
+    	      			System.out.println("File created: " + myObj.getName()); 
+    	      			FileWriter myWriter = new FileWriter(Teamname + ".txt");
+    	    	      	myWriter.write(teamaname + " " + row + " " + col);
+    	    	      	myWriter.close();
+    	    	      	System.out.println("Successfully wrote to the file.");
+    	      		} 
+    	      		else 
+    	      		{
+    	      			System.out.println("An error creating the file has occurred");
+    	      		}
+    		} 
+    	catch (IOException e) 
+    		{
+    	      System.out.println("An error writing the file has occurred.");
+    	      e.printStackTrace();
+    	    }
+    	
+    }
+    
 }
