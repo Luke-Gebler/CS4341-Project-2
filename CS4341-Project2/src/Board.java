@@ -1,3 +1,5 @@
+import java.io.*; 
+
 public class Board {
     
     //Main board
@@ -37,8 +39,8 @@ public class Board {
     	      		if (myObj.createNewFile())
     	      		{
     	      			System.out.println("File created: " + myObj.getName()); 
-    	      			FileWriter myWriter = new FileWriter(Teamname + ".txt");
-    	    	      	myWriter.write(teamaname + " " + row + " " + col);
+    	      			FileWriter myWriter = new FileWriter(teamname + ".txt");
+    	    	      	myWriter.write(teamname + " " + row + " " + col);
     	    	      	myWriter.close();
     	    	      	System.out.println("Successfully wrote to the file.");
     	      		} 

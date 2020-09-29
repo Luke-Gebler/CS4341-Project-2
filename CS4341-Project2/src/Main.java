@@ -6,7 +6,7 @@ public class Main {
     //Main function
     public static void main(String[] args) throws Exception {
         printPiece(5, 4);
-        board.addPeice(5, 4, 1);
+        board.addPiece(5, 4, 1);
         printPiece(5, 4);
     }
 
