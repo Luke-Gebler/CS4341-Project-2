@@ -5,6 +5,7 @@ public class Main {
     //Game board
     static Board board = new Board();
 
+    
     //Main function
     public static void main(String[] args) throws Exception {
         printPiece(5, 4);
