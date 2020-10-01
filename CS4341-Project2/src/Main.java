@@ -1,20 +1,56 @@
-import java.io.File;  // Import the File class
-import java.io.IOException;  // Import the IOException class to handle errors
+import java.io.*;  // Import the File class
+import java.nio.file.*;
+import java.util.concurrent.TimeUnit; //Wait for a second after making a move in order to give ref time to delete gomokugamers.go
+
 public class Main {
 
-    //Game board
-    static Board board = new Board();
+    //True when game has not ended
+    static boolean playing = true;
 
-    
     //Main function
     public static void main(String[] args) throws Exception {
-        printPiece(5, 4);
-        board.addPiece(5, 4, 1);
-        printPiece(5, 4);
+        Board board = new Board();
+        Minimax minimax = new Minimax();
+        String workingDir = System.getProperty("user.dir"); //Current working directory
+        String dirPath = workingDir + "\\gomokugamers.go"; //Path to gomokugamers.go (our team name for)
+        String dirEnd = workingDir + "\\end_game"; //Path to end_game file
+        String filePath = workingDir + "\\move_file"; //Path to move_file
+        Path path = Paths.get(dirPath);
+        Path end = Paths.get(dirEnd);
+
+        //Constantly loop waiting for gomokugamers.go to appear
+        while(playing) {
+            if(checkMyTurn(path, end)) {
+                FileReader reader = new FileReader(new File(filePath));
+                BufferedReader bufferedReader = new BufferedReader(reader);
+                String move = bufferedReader.readLine(); //Get opponents move
+                reader.close();
+                board.addPiece(move, 2); //Add opponents move to our local game board (in order to calculate next best move)
+                board.printBoard();
+                //minimax.nextMove(); TODO: Calculate next move
+                //---> turn nextMove() into format for passing through to printMove as parameters
+                FileWriter writer = new FileWriter(new File(filePath));
+                writer.write("nextMove() output (TODO)"); //write move to file
+                writer.close();
+                //board.addPiece(nextMove(), 1); <--- Add our move to our local game board 
+                System.out.println("Wrote move to move_file");
+                while(Files.exists(path)) { //Waits for ref to delete file before looking for it again
+                    continue;
+                }
+                System.out.println("Go file deleted by ref, waiting for it to be replaced.");
+            }
+        }
+        System.out.println("Game finished");
     }
 
-    //Prints the piece of the board at the given coordinates
-    public static void printPiece(int x, int y) {
-        System.out.println("Piece at " + x + ", " + y + ": " + board.getPiece(x, y));
+    //Checks if end_game file is in directory, if it is, end the program
+    //Else, return whether gomokugamers.go is in the directory
+    public static boolean checkMyTurn(Path path, Path end) {
+        if(Files.exists(end)) {
+            playing = false;
+            return false; 
+        }
+        return Files.exists(path);
     }
+    
 }
