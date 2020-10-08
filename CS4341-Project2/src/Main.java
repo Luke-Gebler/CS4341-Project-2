@@ -27,13 +27,17 @@ public class Main {
                 reader.close();
                 board.addPiece(move, 2); //Add opponents move to our local game board (in order to calculate next best move)
                 board.printBoard();
-                //minimax.nextMove(); TODO: Calculate next move
-                //---> turn nextMove() into format for passing through to printMove as parameters
+
+                Node node = minimax.minimax(board, 5, Integer.MAX_VALUE, Integer.MIN_VALUE, true);
+                board.addPiece(node.x, node.y, 1);
+                
                 FileWriter writer = new FileWriter(new File(filePath));
-                writer.write("nextMove() output (TODO)"); //write move to file
+                String letter = board.translateInt(node.x);
+                writer.write("gomokugamers " + letter + " " + (node.y + 1)); //write move to file
                 writer.close();
                 //board.addPiece(nextMove(), 1); <--- Add our move to our local game board 
                 System.out.println("Wrote move to move_file");
+                board.printBoard();
                 while(Files.exists(path)) { //Waits for ref to delete file before looking for it again
                     continue;
                 }

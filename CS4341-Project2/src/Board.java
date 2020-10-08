@@ -35,7 +35,7 @@ public class Board {
 
     //Adds a piece to the board if no piece exists there yet(board[x][y] == 0)
         //Currently accepts any # for piece parameter since we haven't decided what numbers we're accpeting (probably 1 and 2 for the two players?)
-    private boolean addPiece(int x, int y, int piece) {
+    public boolean addPiece(int x, int y, int piece) {
         boolean flag = false;
         if(board[x][y] == 0) {
             board[x][y] = piece;
@@ -81,7 +81,7 @@ public class Board {
     }
     
     // Translates letter to number in array
-    private static int translateLetter(String letter) {
+    public static int translateLetter(String letter) {
         switch(letter) {
             case "A":
                 return 0;
@@ -119,7 +119,7 @@ public class Board {
     }
 
     //Translates number in board array to coorresponding letter for writing to move_file
-    private static String translateInt(int num) {
+    public static String translateInt(int num) {
         switch(num) {
             case 0:
                 return "A";
