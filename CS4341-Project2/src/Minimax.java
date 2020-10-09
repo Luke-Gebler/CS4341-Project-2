@@ -6,6 +6,9 @@ public class Minimax {
     int threeScore = 100;
     int twoScore = 5; //Somewhat of a bug... twos will get counted twice so their value was halfed
 
+    long nineSecondsNano = 9000000000L;
+    long eightSecondsNano = 8000000000L;
+
     /* Main minimax function
         Board: current board
         depth: how many layers deep you want to search
@@ -21,6 +24,7 @@ public class Minimax {
     public Node minimax(Board board, int depth, int alpha, int beta, boolean maximizingPlayer) {
         int x = 0;
         int y = 0;
+
         //Depth reached or terminal state reached (5 in a row)
         if (depth == 0 || is_terminal(board)) {
             return new Node(scorePosition(board, maximizingPlayer), x, y);
@@ -33,6 +37,14 @@ public class Minimax {
         if(validMoves.size() == 0) {
             return new Node(scorePosition(board, maximizingPlayer), x, y);
         }
+
+        //1 second left, purge every child and make depth = 1 (pretty much just take whatever move is best so far)
+        if(System.nanoTime() - Main.startTime >= nineSecondsNano) {
+            for(int i = 1; i < validMoves.size(); i++) {
+                validMoves.remove(1);
+            }
+            depth = 1;
+        }
         
         if (maximizingPlayer) {
             int max = Integer.MIN_VALUE;
@@ -44,9 +56,8 @@ public class Minimax {
                 if(max == eval) {
                     x = c.x;
                     y = c.y;
-                }
-               // System.out.println("Alpha: " + alpha + "   Eval: " + eval + "   Max: " + max);
-                
+                }                
+
                 alpha = Math.max(alpha, eval);
                 
                 if(beta <= alpha) {
@@ -68,7 +79,7 @@ public class Minimax {
                     y = c.y;
                 }
                 
-                beta = Math.max(beta, eval); //changed min to eval, and math.max
+                beta = Math.max(beta, eval);
                 
                 if(beta <= alpha) {
                     break;

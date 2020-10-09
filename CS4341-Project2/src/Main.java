@@ -1,11 +1,16 @@
 import java.io.*;  // Import the File class
 import java.nio.file.*;
-import java.util.concurrent.TimeUnit; //Wait for a second after making a move in order to give ref time to delete gomokugamers.go
+import java.util.*; //Wait for a second after making a move in order to give ref time to delete gomokugamers.go
 
 public class Main {
 
+    //Keep track of time
+    public static long startTime = System.nanoTime();
+
     //True when game has not ended
     static boolean playing = true;
+
+    static int depth = 5;
 
     //Main function
     public static void main(String[] args) throws Exception {
@@ -20,6 +25,7 @@ public class Main {
 
         //Constantly loop waiting for gomokugamers.go to appear
         while(playing) {
+            startTime = System.nanoTime();
             if(checkMyTurn(path, end)) {
                 FileReader reader = new FileReader(new File(filePath));
                 BufferedReader bufferedReader = new BufferedReader(reader);
@@ -28,7 +34,13 @@ public class Main {
                 board.addPiece(move, 2); //Add opponents move to our local game board (in order to calculate next best move)
                 board.printBoard();
 
-                Node node = minimax.minimax(board, 5, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+                ArrayList<Coordinate> coords = minimax.getValidMoves(board);
+                for(int i = 0; i < coords.size() % 10; i++) {
+                    if(depth > 1) {
+                        depth--;
+                    }
+                }
+                Node node = minimax.minimax(board, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
                 board.addPiece(node.x, node.y, 1);
                 
                 FileWriter writer = new FileWriter(new File(filePath));
