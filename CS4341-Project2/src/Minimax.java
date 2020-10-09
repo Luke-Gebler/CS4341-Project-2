@@ -45,7 +45,8 @@ public class Minimax {
                     x = c.x;
                     y = c.y;
                 }
-                alpha = Math.max(alpha, eval);
+                System.out.println("Alpha: " + alpha + "   Eval: " + eval + "   Max: " + max);
+                alpha = Math.max(alpha, max);
                 if(beta <= alpha) {
                     break;
                 }
@@ -64,7 +65,7 @@ public class Minimax {
                     x = c.x;
                     y = c.y;
                 }
-                alpha = Math.min(alpha, eval);
+                beta = Math.min(beta, min);
                 if(beta <= alpha) {
                     break;
                 }
@@ -106,7 +107,7 @@ public class Minimax {
         twos = total[4] / 2;
         oTwos = total[5] / 2;
 
-        finalScore = (int)(finalScore + (oFours * fourScore * -1.2) + (oThrees * threeScore * -1.2) + (oTwos * twoScore * -1.2)); //Adding all opponent scores AUGMENTED for defensive play currently
+        finalScore = (int)(finalScore + (oFours * fourScore * -1.1) + (oThrees * threeScore * -1.1) + (oTwos * twoScore * -1.1)); //Adding all opponent scores AUGMENTED for defensive play currently
         finalScore = finalScore + (fours * fourScore) + (threes * threeScore) + (twos * twoScore); //Adding our points
 
         return finalScore;
@@ -561,7 +562,6 @@ public class Minimax {
             }
         }
         return validMoves;
-
     }
 
     //Returns true if coordinate already exists in array

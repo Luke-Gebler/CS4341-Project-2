@@ -28,7 +28,7 @@ public class Main {
                 board.addPiece(move, 2); //Add opponents move to our local game board (in order to calculate next best move)
                 board.printBoard();
 
-                Node node = minimax.minimax(board, 5, Integer.MAX_VALUE, Integer.MIN_VALUE, true);
+                Node node = minimax.minimax(board, 5, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
                 board.addPiece(node.x, node.y, 1);
                 
                 FileWriter writer = new FileWriter(new File(filePath));
