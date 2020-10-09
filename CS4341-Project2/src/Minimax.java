@@ -45,8 +45,10 @@ public class Minimax {
                     x = c.x;
                     y = c.y;
                 }
-                System.out.println("Alpha: " + alpha + "   Eval: " + eval + "   Max: " + max);
-                alpha = Math.max(alpha, max);
+               // System.out.println("Alpha: " + alpha + "   Eval: " + eval + "   Max: " + max);
+                
+                alpha = Math.max(alpha, eval);
+                
                 if(beta <= alpha) {
                     break;
                 }
@@ -65,7 +67,9 @@ public class Minimax {
                     x = c.x;
                     y = c.y;
                 }
-                beta = Math.min(beta, min);
+                
+                beta = Math.max(beta, eval); //changed min to eval, and math.max
+                
                 if(beta <= alpha) {
                     break;
                 }
