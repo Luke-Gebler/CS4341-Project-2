@@ -40,6 +40,7 @@ public class Main {
                         depth--;
                     }
                 }
+                
                 Node node = minimax.minimax(board, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
                 board.addPiece(node.x, node.y, 1);
                 
