@@ -39,7 +39,7 @@ public class Main {
                     board.printBoard();
 
                     ArrayList<Coordinate> coords = minimax.getValidMoves(board);
-                    for(int i = 0; i < Math.floor(coords.size() / 10.0); i++) {
+                    for(int i = 0; i < Math.floor(coords.size() / 15.0); i++) {
                         if(depth > 1) {
                             depth--;
                         }
