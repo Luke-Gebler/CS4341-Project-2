@@ -53,6 +53,9 @@ public class Board {
         return piece;
     }
     
+        public int[][] getBoard() {
+        return board;
+    }
     //untested. This is a function for creating a move file
     //teamname: the name of our team
     //row: the letter of the row that has been selected (might be able to have this be a number but map it to some numbers?)
