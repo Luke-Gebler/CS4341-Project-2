@@ -31,17 +31,22 @@ public class Main {
                 BufferedReader bufferedReader = new BufferedReader(reader);
                 String move = bufferedReader.readLine(); //Get opponents move
                 reader.close();
-                board.addPiece(move, 2); //Add opponents move to our local game board (in order to calculate next best move)
-                board.printBoard();
+                Node node;
+                if(move == null) {
+                    node = new Node(0, 7, 7);
+                } else {
+                    board.addPiece(move, 2); //Add opponents move to our local game board (in order to calculate next best move)
+                    board.printBoard();
 
-                ArrayList<Coordinate> coords = minimax.getValidMoves(board);
-                for(int i = 0; i < Math.floor(coords.size() / 10.0); i++) {
-                    if(depth > 1) {
-                        depth--;
+                    ArrayList<Coordinate> coords = minimax.getValidMoves(board);
+                    for(int i = 0; i < Math.floor(coords.size() / 10.0); i++) {
+                        if(depth > 1) {
+                            depth--;
+                        }
                     }
+                    
+                    node = minimax.minimax(board, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
                 }
-                
-                Node node = minimax.minimax(board, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
                 board.addPiece(node.x, node.y, 1);
                 
                 FileWriter writer = new FileWriter(new File(filePath));

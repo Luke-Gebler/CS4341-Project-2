@@ -13,7 +13,7 @@ public class Board {
         //String move: move_file text
         //Int color: 1 for our piece, 2 for opponents
     public void addPiece(String move, int color) {
-        if(!move.isEmpty()) {
+        if(move != null) {
             String[] moves = move.split(" ");
             int x = translateLetter(moves[1]);
             int y = Integer.parseInt(moves[2]) - 1;
