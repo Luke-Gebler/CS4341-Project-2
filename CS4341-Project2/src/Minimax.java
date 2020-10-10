@@ -5,7 +5,9 @@ public class Minimax {
     int fourScore = 1000;
     int threeScore = 100;
     int twoScore = 5; //Somewhat of a bug... twos will get counted twice so their value was halfed
-
+    private int winScore = Integer.MAX_VALUE;
+    
+    
     long nineSecondsNano = 9000000000L;
     long eightSecondsNano = 8000000000L;
 
@@ -89,7 +91,278 @@ public class Minimax {
         }
     }
 
+  
+
+    //Gives score based on current position of the board
+    public int  scorePosition(Board board, boolean maximizingPlayer) {
+        double maxScore = getScore(board, true, maximizingPlayer);  //b
+        double minScore = getScore(board, false, maximizingPlayer);
+
+        if(maxScore == 0)
+            maxScore = 1.0;
+
+        int finalScore = (int)(minScore / maxScore);
+
+        return finalScore;
+    }
+
+
+    public  int getScore(Board board, boolean forStartingPlayer, boolean oppositionTurn)
+    {
+
+        int[][] boardArray = board.getBoard();
+
+        int hSCore = getHorizontalScore(boardArray, forStartingPlayer, oppositionTurn);
+        int vScore = getVerticalScore(boardArray, forStartingPlayer, oppositionTurn);
+        int dScore =  getDiagonalScore(boardArray, forStartingPlayer, oppositionTurn);
+        return hSCore + vScore + dScore;
+    }
+
+
+
+
+    public   int getDiagonalScore(int[][] board, boolean forStartingPlayer, boolean oppositionTurn ) {
+
+        int diagonalScore = 0;
+        int consecutivePieces = 0;
+        int potentialBlocks = 2;
+
+
+        for (int n = 0; n <= 2 * (board.length - 1); n++) { //bottom left
+            int diagStart = Math.max(0, n - board.length + 1);
+            int diagEnd = Math.min(board.length - 1, n);
+
+            for (int i = diagStart; i <= diagEnd; ++i)
+            {
+                int j = n - i;
+
+                if(board[i][j] == (forStartingPlayer ? 2 : 1)) {
+                    consecutivePieces += 1;
+                }
+                else if(board[i][j] == 0)
+                {
+                    if(consecutivePieces > 0)
+                    {
+
+                        potentialBlocks -= 1;
+                        diagonalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+                        potentialBlocks = 1;
+                        consecutivePieces = 0;
+
+                    }
+                    else {
+                        potentialBlocks = 1;
+                    }
+                }
+                else if(consecutivePieces > 0) {
+                    diagonalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+                    potentialBlocks = 2;
+                    consecutivePieces = 0;
+
+                }
+                else {
+                    potentialBlocks = 2;
+                }
+
+            }
+            if(consecutivePieces > 0) {
+                diagonalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+
+            }
+            potentialBlocks = 2;
+            consecutivePieces = 0;
+
+        }
+
+        for (int n = 1-board.length; n < board.length; n++)
+        { //starts top left
+            int diagStart = Math.max(0, n);
+            int diagEnd = Math.min(board.length + n - 1, board.length-1);
+            for (int i = diagStart; i <= diagEnd; ++i) {
+                int j = i - n;
+
+                if(board[i][j] == (forStartingPlayer ? 2 : 1)) {
+                    consecutivePieces++;
+                }
+                else if(board[i][j] == 0)
+                {
+                    if(consecutivePieces > 0) {
+                        potentialBlocks--;
+                        diagonalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+                        potentialBlocks = 1;
+                        consecutivePieces = 0;
+
+                    }
+                    else {
+                        potentialBlocks = 1;
+                    }
+                }
+                else if(consecutivePieces > 0) {
+                    diagonalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+                    potentialBlocks = 2;
+                    consecutivePieces = 0;
+
+                }
+                else {
+                    potentialBlocks = 2;
+                }
+
+            }
+            if(consecutivePieces > 0) {
+                diagonalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+
+            }
+            potentialBlocks = 2;
+            consecutivePieces = 0;
+
+
+        }
+        return diagonalScore;
+    }
+
+    public   int getVerticalScore(int[][] board, boolean forStartingPlayer, boolean oppositionTurn )
+    {
+        int potentialBlocks = 2;
+        int consecutivePieces = 0;
+
+        int verticalScore = 0;
+
+        for(int i=0; i<board[0].length; i++) {
+            for(int j=0; j<board.length; j++) {
+                if(board[j][i] == (forStartingPlayer ? 2 : 1)) {
+                    consecutivePieces++;
+                }
+                else if(board[j][i] == 0) {
+                    if(consecutivePieces > 0) {
+                        potentialBlocks--;
+                        verticalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+                        consecutivePieces = 0;
+                        potentialBlocks = 1;
+                    }
+                    else {
+                        potentialBlocks = 1;
+                    }
+                }
+                else if(consecutivePieces > 0) {
+                    verticalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+                    potentialBlocks = 2;
+                    consecutivePieces = 0;
+
+                }
+                else {
+                    potentialBlocks = 2;
+                }
+            }
+            if(consecutivePieces > 0) {
+                verticalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+
+            }
+            potentialBlocks = 2;
+            consecutivePieces = 0;
+
+
+        }
+        return verticalScore;
+    }
+
+    public  int getHorizontalScore(int[][] board, boolean forStartingPlayer, boolean oppositionTurn )
+    {
+        int potentialBlocks = 2;
+        int consecutivePieces = 0;
+
+        int horizontalScore = 0;
+
+        for(int i= 0; i < board.length; i++)
+        {
+            for(int j=0; j<board[0].length; j++)
+            {
+                if(board[i][j] == (forStartingPlayer ? 2 : 1))
+                {
+                    consecutivePieces++;
+                }
+
+                else if(board[i][j] == 0)
+                {
+                    if(consecutivePieces > 0) {
+                        potentialBlocks--;
+                        horizontalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+
+                        potentialBlocks = 1;
+                        consecutivePieces = 0;
+
+                    }
+                    else {
+                        potentialBlocks = 1;
+                    }
+                }
+                else if(consecutivePieces > 0) {
+                    horizontalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+                    potentialBlocks = 2;
+                    consecutivePieces = 0;
+
+                }
+                else {
+                    potentialBlocks = 2;
+                }
+            }
+            if(consecutivePieces > 0) {
+                horizontalScore += getScoreForPieces(consecutivePieces, forStartingPlayer == oppositionTurn, potentialBlocks);
+
+            }
+            potentialBlocks = 2;
+
+            consecutivePieces = 0;
+
+        }
+        return horizontalScore;
+    }
+
+    public   int getScoreForPieces(int pieceCount, boolean currentTurn, int potentialBlocks) {
+
+        final int guaranteedWinScore = 900000; //4 in a row cannot be blocked! arbitrary large number
+
+        if(potentialBlocks == 2 && pieceCount < 5) return 0;
+        switch(pieceCount)
+        {
+            case 5:
+                {
+                return winScore;
+            }
+            case 4: {
+                if(currentTurn) return guaranteedWinScore;
+                else {
+                    if(potentialBlocks == 0) return guaranteedWinScore/4;
+                    else return 200;
+                }
+            }
+            case 3: {
+                if(potentialBlocks == 0) {
+                    if(currentTurn) return 50000; //could adjust these values
+                    else return 200;
+                }
+                else {
+                    if(currentTurn) return 10;
+                    else return 5;
+                }
+            }
+            case 2: {
+                if(potentialBlocks == 0) {
+                    if(currentTurn) return 7;
+                    else return 5;
+                }
+                else {
+                    return 3;
+                }
+            }
+            case 1: {
+                return 1;
+            }
+        }
+        return winScore * 2;
+    }
+   
     
+      /*
     //Gives score based on current position of the board
     public int scorePosition(Board board, boolean maximizingPlayer) {
         int finalScore = 0;
@@ -128,6 +401,8 @@ public class Minimax {
         return finalScore;
     }
 
+    
+    
     //Scores the current board based on # of 4 in a row, 3 in a row, and 2 in a row by each player.
     private int[] sequencesOnBoard(Board board) {
         int[] total = new int[6];
@@ -491,7 +766,7 @@ public class Minimax {
         total[5] = oTwos;
         return total;
     }
-
+*/
     //Used so that we can go down a branch without messing up our main board
     private Board copyBoard(Board board) {
         Board b_copy = new Board();
